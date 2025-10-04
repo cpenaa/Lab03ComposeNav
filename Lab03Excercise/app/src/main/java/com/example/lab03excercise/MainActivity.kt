@@ -17,6 +17,8 @@ import androidx.navigation.navArgument
 import java.net.URLEncoder
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
+import android.net.Uri
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +42,7 @@ fun AppNavigation() {
         composable("pantalla1") {
             Pantalla1(
                 onNavigate = { texto ->
-                    // ✅ Importante: codificamos el texto para evitar errores con espacios o caracteres especiales
-                    val encoded = URLEncoder.encode(texto, StandardCharsets.UTF_8.toString())
+                    val encoded = Uri.encode(texto)
                     navController.navigate("pantalla2/$encoded")
                 }
             )
@@ -52,7 +53,7 @@ fun AppNavigation() {
             arguments = listOf(navArgument("mensaje") { type = NavType.StringType })
         ) { backStackEntry ->
             val encodedMsg = backStackEntry.arguments?.getString("mensaje") ?: ""
-            val mensaje = URLDecoder.decode(encodedMsg, StandardCharsets.UTF_8.toString())
+            val mensaje = Uri.decode(encodedMsg)
             Pantalla2(mensaje)
         }
     }
